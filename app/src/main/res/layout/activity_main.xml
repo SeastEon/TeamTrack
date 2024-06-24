@@ -28,7 +28,7 @@
                 android:textColor="@color/white"
                 android:textSize="25sp" />
             <ImageButton
-                android:id="@+id/Settings"
+                android:id="@+id/SettingsBtn"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"
