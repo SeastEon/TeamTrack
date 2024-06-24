@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "344942179142",
+    "project_id": "teamtrack-14574",
+    "storage_bucket": "teamtrack-14574.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344942179142:android:95aa37c1ad04dc5db4ab47",
+        "android_client_info": {
+          "package_name": "com.example.teamtrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQKYm9QnkQahx04zVoXx-AUt1FB-1TIcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
