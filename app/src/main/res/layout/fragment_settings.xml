@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".settings">
+
+    <?xml version="1.0" encoding="utf-8"?>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:background="@color/grey">
+
+        <LinearLayout
+            android:id="@+id/SettingsHeaderID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/DarkGrey">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/SettingsHeaderID">
+
+            <Button
+                android:layout_marginTop="20dp"
+                android:id="@+id/EditTeamBtn"
+                android:layout_width="350dp"
+                android:layout_marginLeft="30dp"
+                android:layout_height="wrap_content"
+                android:text="Edit Teams"
+                android:textAlignment="textStart"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/EditPosition"
+                android:layout_width="350dp"
+                android:layout_marginLeft="30dp"
+                android:layout_below="@id/EditTeamBtn"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:text="Edit Position"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/EditAccount"
+                android:layout_width="350dp"
+                android:layout_marginLeft="30dp"
+                android:layout_below="@id/EditPosition"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:text="Edit Account"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/Notifications"
+                android:layout_width="350dp"
+                android:layout_marginLeft="30dp"
+                android:layout_below="@id/EditAccount"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:text="Notifications"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/black" />
+
+            <Button
+                android:id="@+id/Logout"
+                android:layout_width="350dp"
+                android:layout_marginLeft="30dp"
+                android:layout_below="@id/Notifications"
+                android:layout_height="wrap_content"
+                android:textAlignment="textStart"
+                android:text="Logout"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/black" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>
