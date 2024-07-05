@@ -11,7 +11,7 @@
         android:id="@+id/TextReasonID"
         android:layout_width="300dp"
         android:layout_height="30dp"
-        android:hint="Reason for points"
+        android:hint="@string/reason_for_points"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
