@@ -2,13 +2,13 @@ package com.example.teamtrack;
 
 public class TeamMember {
     public String mName;
-    public enum Position {Coach, Captain, Jumpers}
+    public enum Position {Junior, Senior, Captain, Coach, Head_Coach}
     public Position mPosition;
     public int mIndividualPoints;
 
     public TeamMember(){
         mName = "";
-        mPosition = Position.Jumpers;
+        mPosition = Position.Junior;
         mIndividualPoints = 0;
     }
 
@@ -22,9 +22,5 @@ public class TeamMember {
         mName = Name;
         mPosition = Position;
         mIndividualPoints = 0;
-    }
-
-    void AddTeamMemberDialog(){
-
     }
 }

@@ -1,7 +1,10 @@
 package com.example.teamtrack;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
-import android.credentials.CreateCredentialException;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,126 +15,132 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import java.util.Dictionary;
+import java.util.List;
+import java.util.Locale;
 
 public class WidgetFactory {
-
-    View mCurrentview;
-    FragmentManager mfragmentManager;
+    ActivityVariables ThisActivity;
+    FragmentManager mFragmentManager;
     boolean ExtraTagsActive = false;
+    Dictionary<String, List<String>> mPositionAndMember;
+    CreateDialogBoxes mDialogBoxCreator;
 
-    WidgetFactory(View currentView, FragmentManager fragmentManager){
-        mCurrentview = currentView;
-        mfragmentManager = fragmentManager;
+    WidgetFactory(View currentView, FragmentManager fragmentManager, Context CurrContext, Activity mainActivity ){
+        ThisActivity = new ActivityVariables(currentView, CurrContext, mainActivity);
+        mFragmentManager = fragmentManager;
+        mDialogBoxCreator = new CreateDialogBoxes(CurrContext, mainActivity);
+    }
+
+    void CreateMembersWidgets(fragment_members Fragment_members){
+        ImageButton OpenMemberSideBar = ThisActivity.mView.findViewById(R.id.AccessTeamMembers);
+        OpenMemberSideBar.setOnClickListener(view -> {
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
+            transaction.replace(R.id.mainActivity, Fragment_members).setReorderingAllowed(true).addToBackStack(null);
+            transaction.commit();
+        });
     }
 
     void CreateSettingsWidgets(){
-        Button BtnEditTeam = mCurrentview.findViewById(R.id.EditTeamBtn);
-        BtnEditTeam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        Button BtnCreateNewTeam = ThisActivity.mView.findViewById(R.id.CreateTeamBtn);
+        BtnCreateNewTeam.setOnClickListener(view -> mDialogBoxCreator.CreateAlertBoxForTeamCreation(R.layout.layout_add_team, "Create New Team"));
 
-            }
+        Button BtnEditTeam = ThisActivity.mView.findViewById(R.id.EditTeamBtn);
+        BtnEditTeam.setOnClickListener(view -> {
+
         });
 
-        Button BtnEditAccount= mCurrentview.findViewById(R.id.EditAccount);
-        BtnEditAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        Button BtnEditAccount= ThisActivity.mView.findViewById(R.id.EditAccount);
+        BtnEditAccount.setOnClickListener(view -> {
 
-            }
         });
-        Button BtnEditPosition = mCurrentview.findViewById(R.id.EditPosition);
-        BtnEditPosition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        Button BtnEditPosition = ThisActivity.mView.findViewById(R.id.EditPosition);
+        BtnEditPosition.setOnClickListener(view -> {
 
-            }
         });
-        Button BtnNotifications = mCurrentview.findViewById(R.id.Notifications);
-        BtnNotifications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        Button BtnNotifications = ThisActivity.mView.findViewById(R.id.Notifications);
+        BtnNotifications.setOnClickListener(view -> {
 
-            }
         });
-        Button BtnLogouts = mCurrentview.findViewById(R.id.Logout);
-        BtnLogouts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        Button BtnLogouts = ThisActivity.mView.findViewById(R.id.Logout);
+        BtnLogouts.setOnClickListener(view -> {
 
-            }
         });
 
-        Button BtnExitSettings = mCurrentview.findViewById(R.id.CloseSettings);
-        BtnExitSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new settings();
-                mfragmentManager.popBackStack();
-            }
-        });
+        Button BtnExitSettings = ThisActivity.mView.findViewById(R.id.CloseSettings);
+        BtnExitSettings.setOnClickListener(view -> mFragmentManager.popBackStack());
     }
 
-    void CreateMainButtons(Context mainContext, AddExtraTags addExtraTags, RelativeLayout mainLayout){
+    @SuppressLint("ClickableViewAccessibility")
+    void CreateMainButtons(RelativeLayout mainLayout, settings SettingsFragment){
 
-        LinearLayout ScrollViewLinearLayout = mCurrentview.findViewById(R.id.BottomNavigationID);
-        ScrollView ScrollViewContainingLinearLayout = mCurrentview.findViewById(R.id.ScrollViewMainActivity);
+        LinearLayout ScrollViewLinearLayout = ThisActivity.mView.findViewById(R.id.BottomNavigationID);
+        ScrollView ScrollViewContainingLinearLayout = ThisActivity.mView.findViewById(R.id.ScrollViewMainActivity);
 
         //We want to remember the layout of the scrollview so we can reset the values
         ViewGroup.LayoutParams ScrollParams = ScrollViewContainingLinearLayout.getLayoutParams();
-        int ScrollViewTop = ScrollViewContainingLinearLayout.getTop();
 
         //Giving spinners their arrays
-        Spinner NumberSpinner = mCurrentview.findViewById(R.id.SpinnerInputNumberID);
-        ArrayAdapter<CharSequence> numberAdapter=ArrayAdapter.createFromResource(mainContext, R.array.IncreamentValues, android.R.layout.simple_spinner_item);
+        Spinner NumberSpinner = ThisActivity.mView.findViewById(R.id.SpinnerInputNumberID);
+        ArrayAdapter<CharSequence> numberAdapter=ArrayAdapter.createFromResource(ThisActivity.mContext, R.array.IncreamentValues, android.R.layout.simple_spinner_item);
         numberAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         NumberSpinner.setAdapter(numberAdapter);
 
         //Buttons
-        ImageButton AddSingleButton = mCurrentview.findViewById(R.id.ImageViewMainCircle);
+        ImageButton AddSingleButton = ThisActivity.mView.findViewById(R.id.ImageViewMainCircle);
         AddSingleButton.setOnClickListener(view -> {
-            TextView CurrentTeamPointValue = mCurrentview.findViewById(R.id.TextTeamPointsID);
-            CurrentTeamPointValue.setText(Integer.toString(Integer.parseInt(CurrentTeamPointValue.getText().toString()) + 1));
+            TextView CurrentTeamPointValue = ThisActivity.mView.findViewById(R.id.TextTeamPointsID);
+            CurrentTeamPointValue.setText(String.format(Locale.getDefault(),"%d",Integer.parseInt(CurrentTeamPointValue.getText().toString()) + 1));
         });
 
-        ImageButton AddDropDownBoxToPoints = mCurrentview.findViewById(R.id.ImageBtnAddID);
+        ImageButton AddDropDownBoxToPoints = ThisActivity.mView.findViewById(R.id.ImageBtnAddID);
         AddDropDownBoxToPoints.setOnClickListener(view -> {
-            TextView CurrentTeamPointValue = mCurrentview.findViewById(R.id.TextTeamPointsID);
-            Spinner NumberSpinner12 = (Spinner) mCurrentview.findViewById(R.id.SpinnerInputNumberID);
-            CurrentTeamPointValue.setText(Integer.toString(Integer.parseInt(CurrentTeamPointValue.getText().toString()) + Integer.parseInt(NumberSpinner12.getSelectedItem().toString())));
+            TextView CurrentTeamPointValue = ThisActivity.mView.findViewById(R.id.TextTeamPointsID);
+            CurrentTeamPointValue.setText(String.format(Locale.getDefault(),"%d",Integer.parseInt(CurrentTeamPointValue.getText().toString()) + Integer.parseInt(NumberSpinner.getSelectedItem().toString())));
         });
 
-        ImageButton SubtractDropDownBoxFromPoints = mCurrentview.findViewById(R.id.ImageBtnSubtractID);
+        ImageButton SubtractDropDownBoxFromPoints = ThisActivity.mView.findViewById(R.id.ImageBtnSubtractID);
         SubtractDropDownBoxFromPoints.setOnClickListener(view -> {
-            TextView CurrentTeamPointValue = mCurrentview.findViewById(R.id.TextTeamPointsID);
-            Spinner NumberSpinner1 = (Spinner) mCurrentview.findViewById(R.id.SpinnerInputNumberID);
-            CurrentTeamPointValue.setText(Integer.toString(Integer.parseInt(CurrentTeamPointValue.getText().toString()) - Integer.parseInt(NumberSpinner1.getSelectedItem().toString())));
+            TextView CurrentTeamPointValue = ThisActivity.mView.findViewById(R.id.TextTeamPointsID);
+            CurrentTeamPointValue.setText(String.format(Locale.getDefault(),"%d",Integer.parseInt(CurrentTeamPointValue.getText().toString()) - Integer.parseInt(NumberSpinner.getSelectedItem().toString())));
         });
 
-        ImageButton OpenExtraTagsMenuBtn = mCurrentview.findViewById(R.id.ImageBtnOpenMoreTagsMenu);
+        ImageButton OpenExtraTagsMenuBtn = ThisActivity.mView.findViewById(R.id.ImageBtnOpenMoreTagsMenu);
         OpenExtraTagsMenuBtn.setOnClickListener(view -> {
-            if (!ExtraTagsActive){addExtraTags.CreateExtraTagsBox(mainContext, mainLayout); ExtraTagsActive = true;}
+            if (!ExtraTagsActive){AddExtraTags.CreateExtraTagsBox(ThisActivity.mContext, mainLayout, ThisActivity.mView); ExtraTagsActive = true;}
             else {
-                //We subtract 1 from the child count because we need to 0 index and the count gets an unindexed number
+                //We subtract 1 from the child count because we need to 0 index and the count gets an not indexed number
                 ScrollViewLinearLayout.removeViewAt(ScrollViewLinearLayout.getChildCount()-1);
-                ScrollParams.height = 240;
+                ScrollParams.height = 380;
                 ScrollViewContainingLinearLayout.setLayoutParams(ScrollParams);
                 ExtraTagsActive = false;
             }
         });
 
-        ImageButton OpenSettingsBtn = mCurrentview.findViewById(R.id.SettingsBtn);
+        ImageButton OpenSettingsBtn = ThisActivity.mView.findViewById(R.id.SettingsBtn);
         OpenSettingsBtn.setOnClickListener(view -> {
-            Fragment fragment = new settings();
-            FragmentTransaction transaction = mfragmentManager.beginTransaction();
-            transaction.replace(R.id.mainActivity, fragment)
-                    .setReorderingAllowed(true)
-                    .addToBackStack(null);
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
+            transaction.replace(R.id.mainActivity, SettingsFragment).setReorderingAllowed(true).addToBackStack(null);
             transaction.commit();
         });
+
+
+        mainLayout.setOnTouchListener(new OnSwipeTouchListener(ThisActivity.mContext) {
+            @Override
+            public void onSwipeLeft() {
+
+            }
+
+            @Override
+            public void onSwipeRight() {
+
+            }
+        });
+
     }
+
+
+
 }

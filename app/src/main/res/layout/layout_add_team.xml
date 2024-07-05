@@ -2,39 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
    android:id="@+id/CreateNewTeam"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="wrap_content"
     android:background="@color/grey">
-
-    <LinearLayout
-        android:id="@+id/CreateTeamHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/DarkGrey">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create Team"
-            android:textColor="@color/white"/>
-    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/TextLayout"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/CreateTeamHeader"
-        android:layout_alignStart="@+id/EditablesLayout"
-        android:layout_marginStart="-150dp"
-        android:layout_toEndOf="@+id/EditablesLayout"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentStart="true"
+        android:orientation="vertical"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/CreateTeamHeader"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
-            android:text="New Team Name"
+            android:text="@string/new_team_name"
+            android:textSize="15sp"
             android:textColor="@color/white" />
 
         <TextView
@@ -42,68 +29,75 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="Select Team Color"
+            android:text="@string/select_team_color"
+            android:textSize="15sp"
             android:textColor="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
-            android:text="Add Team Members"
-            android:textColor="@color/white" />
+            android:textSize="15sp"
+            android:text="@string/add_team_members"
+            android:textColor="@color/white"
+            />
     </LinearLayout>
 
-<LinearLayout
+<RelativeLayout
     android:id="@+id/EditablesLayout"
     android:layout_width="250dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_alignParentRight="true"
-    android:layout_marginRight="10dp"
-    android:layout_below="@+id/CreateTeamHeader">
+    android:layout_alignParentEnd="true"
+    android:layout_toEndOf="@+id/TextLayout"
+    android:layout_marginEnd="20dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="10dp">
 
     <EditText
+        android:id="@+id/EditTeamName"
         android:layout_width="match_parent"
-        android:layout_height="35dp"
+        android:layout_height="48dp"
+        android:hint="@string/input_the_new_team_name"
+        android:autofillHints="name"
+        android:inputType="text"
         android:background="@color/lightGrey" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="10dp"/>
+    <RelativeLayout
+        android:id="@+id/SelectColorLayout"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/EditTeamName">
 
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
             <Button
                 android:id="@+id/SelectColorBtn"
                 android:layout_width="200dp"
-                android:layout_height="35dp"
+                android:layout_height="48dp"
                 android:background="@color/lightGrey"
-                android:text="Select Color"
+                android:text="@string/select_color"
                 android:textColor="@color/black"
                 android:textSize="11sp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignLeft="@+id/ColorView"/>
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/ColorView"/>
             <View
                 android:id="@+id/ColorView"
                 android:layout_alignParentEnd="true"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_marginStart="15dp"
                 android:background="@color/lightGrey"/>
         </RelativeLayout>
 
-    <Space
+    <Spinner
         android:layout_width="wrap_content"
-        android:layout_height="10dp"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="@color/lightGrey" />
-    </LinearLayout>
-
-
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/SelectColorLayout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:background="@color/lightGrey"
+        android:layout_marginBottom="10dp"/>
+    </RelativeLayout>
 </RelativeLayout>
