@@ -1,9 +1,7 @@
 package com.example.teamtrack;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -16,26 +14,27 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
+    ActivityVariables mAv; //holds the context view and activity for main
     // private final int CurrTeamIndex = 1; Team CurrTeam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Context MainContext = this.getApplicationContext();
-        RelativeLayout MainLayout = findViewById(R.id.mainActivity);
-        View rootView = getWindow().getDecorView().getRootView();
 
-        settings settingsMenu = new settings();//Creates the settings menu
+        mAv = new ActivityVariables(getWindow().getDecorView().getRootView(), this.getApplicationContext(), this);
+        RelativeLayout MainLayout = findViewById(R.id.mainActivity);
+
+        Database db = new Database(MainLayout); db.CreateDatabase();  //Database Creation
+
+        settings settingsMenu = new settings(db);//Creates the settings menu
         CreateNavigation(); //Creates the navigation menu
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         //Creates the widgets for current view
-        WidgetFactory widgetFactory = new WidgetFactory(rootView, getSupportFragmentManager(), MainContext, this);
+        WidgetFactory widgetFactory = new WidgetFactory(mAv, getSupportFragmentManager(), db);
         widgetFactory.CreateMainButtons(MainLayout, settingsMenu);
 
-        //Database Creation
-        Database db = new Database(MainLayout, widgetFactory); db.CreateDatabase();
         //Sets the information from the database
         Thread newThread = new Thread((Runnable) db.SetData(widgetFactory)); newThread.start();
         try {newThread.join();} catch (InterruptedException e) {throw new RuntimeException(e);}

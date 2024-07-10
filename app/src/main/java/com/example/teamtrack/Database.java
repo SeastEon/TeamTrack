@@ -1,16 +1,18 @@
 package com.example.teamtrack;
 
 import static android.content.ContentValues.TAG;
-import android.graphics.Color;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
@@ -23,35 +25,27 @@ public class Database {
     RelativeLayout mMainActivity;
     ArrayList<String> mSpinnerArray;
     fragment_members fm;
-    WidgetFactory mWidgetFactory;
-
     public Dictionary<String, List<String>> mPositionsAndMembers;
-    Database(RelativeLayout mainActivity, WidgetFactory widgetFactory){
+    Database(RelativeLayout mainActivity){
         mMainActivity = mainActivity;
-        mWidgetFactory = widgetFactory;
     }
 
     void CreateDatabase() {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         myRef = database.collection("BDAF").document("NewTeam");
-        List<TeamMember> MemberList = new ArrayList<>();
-        MemberList.add(new TeamMember("Grey", TeamMember.Position.Coach));
-        Team NewTeam = new Team(Color.rgb(2, 8, 7), "GreyTeam", 1000, MemberList, 0);
-        List<Team> TeamList = new ArrayList<>();
-        TeamList.add(NewTeam);
-        Team.DatabaseTeam dbTeam = new Team.DatabaseTeam(TeamList, 0);
-        myRef.set(dbTeam).addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
     }
 
+    void DBChangesMade(){myRef.set(LoadedTeams).addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));}
+
     Team.DatabaseTeam SetData(WidgetFactory widgetFactory){
-        myRef.get().addOnCompleteListener((OnCompleteListener<DocumentSnapshot>) task -> {
+        myRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 LoadedTeams = task.getResult().toObject(Team.DatabaseTeam.class);
                 assert LoadedTeams != null;
-                SetCurrentTeam(LoadedTeams); //gets the first team
+                SetCurrentTeam(); //gets the first team
                 widgetFactory.mPositionAndMember = mPositionsAndMembers;
                 fm = new fragment_members(this);
-                mWidgetFactory.CreateMembersWidgets(fm);
+                widgetFactory.CreateMembersWidgets(fm);
             }
         }); return LoadedTeams;
     }
@@ -62,9 +56,9 @@ public class Database {
         return mSpinnerArray;
     }
 
-    void SetCurrentTeam(Team.DatabaseTeam dbTeam){
+    void SetCurrentTeam(){
         mPositionsAndMembers = new Hashtable<>();
-        Team CurrTeam = dbTeam.mTeamList.get(dbTeam.mCurrentIndex);
+        Team CurrTeam = LoadedTeams.mTeamList.get(LoadedTeams.mCurrentIndex);
 
         TextView TeamNameTxt = mMainActivity.findViewById(R.id.TextTeamNameID);
         TeamNameTxt.setText(CurrTeam.mTeamName);
@@ -102,34 +96,35 @@ public class Database {
         mPositionsAndMembers.put("Head Coach", HeadCoachList);
     }
 
-    static Dictionary<String, List<String>> SetCurrentTeamStaticVer(Team.DatabaseTeam dbTeam){
-        Dictionary<String, List<String>> PositionsAndMembers = new Hashtable<>();
-        Team CurrTeam = dbTeam.mTeamList.get(dbTeam.mCurrentIndex);
+    List<TeamMember> GetFullListOfTeamMembers(){
+        List<TeamMember> FullListOfTeamMembers = new ArrayList<>();
+        for (Team team : LoadedTeams.mTeamList) {FullListOfTeamMembers.addAll(team.mTeamMembers);}
+        return FullListOfTeamMembers;
+    }
 
-        //Creates the lists need to store the jumpers
-        List<String> HeadCoachList = new ArrayList<>();
-        List<String> CoachList = new ArrayList<>();
-        List<String> CaptainList = new ArrayList<>();
-        List<String> SeniorList = new ArrayList<>();
-        List<String> JuniorList = new ArrayList<>();
+    void CreateLogText(Boolean Add, int Value, Boolean ExtraTagsActive, ActivityVariables Av) {
+        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        String AddOrSub;
+        if (Add){ AddOrSub =  ": Add ";}  else {  AddOrSub =  ": Minus ";}
 
-        //this will add the jumpers from the database to list organised by their Position
-        for (TeamMember mTeamMember : CurrTeam.mTeamMembers) {
-            switch(mTeamMember.mPosition){
-                case Junior: JuniorList.add(mTeamMember.mName); break;
-                case Senior: SeniorList.add(mTeamMember.mName); break;
-                case Captain: CaptainList.add(mTeamMember.mName); break;
-                case Coach: CoachList.add(mTeamMember.mName); break;
-                case Head_Coach: HeadCoachList.add(mTeamMember.mName); break;
+        String LogEntry = date + AddOrSub + Value + " from " + LoadedTeams.mTeamList.get(LoadedTeams.mCurrentIndex).toString();
+        if (ExtraTagsActive){
+            EditText TxtReason = Av.mView.findViewById(R.id.TextReasonID);
+            Spinner JumperSpinner = Av.mView.findViewById(R.id.SpinnerJumperID);
+            String SReason = TxtReason.getText().toString();
+            String Member = JumperSpinner.getSelectedItem().toString();
+            if (!Member.equals("")){
+                if (!SReason.equals("")){LogEntry += "because " + Member +" "+ SReason;}
+                else{LogEntry += "because of " + Member;}
+            } else {
+                if (!SReason.equals("")){LogEntry += "because " + Member +" "+ SReason;}
             }
         }
-        //Adds all the members to the dictionary for further use
-        PositionsAndMembers.put("Junior", JuniorList);
-        PositionsAndMembers.put("Senior", SeniorList);
-        PositionsAndMembers.put("Captain", CaptainList);
-        PositionsAndMembers.put("Coach", CoachList);
-        PositionsAndMembers.put("Head Coach", HeadCoachList);
+        AddToLog(LogEntry);
+        DBChangesMade();
+    }
 
-        return PositionsAndMembers;
+    void AddToLog(String Input){
+        LoadedTeams.mTeamLog +=  "\n" + Input;
     }
 }

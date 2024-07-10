@@ -10,12 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
 
 public class AddExtraTags extends AppCompatActivity {
 
-    static void CreateExtraTagsBox(Context mainObjectContext, RelativeLayout mainLayout, View CurrView){
+    static void CreateExtraTagsBox(Context mainObjectContext, RelativeLayout mainLayout,  ArrayList<String> Members){
         //loads up the elements we will be accessing
         LinearLayout ScrollViewMainLayout = mainLayout.findViewById(R.id.BottomNavigationID);
         ScrollView ScrollViewContainingLinearLayout = mainLayout.findViewById(R.id.ScrollViewMainActivity);
@@ -31,8 +31,7 @@ public class AddExtraTags extends AppCompatActivity {
 
         //Creates the spinner data
         Spinner JumperSpinner = dialogView.findViewById(R.id.SpinnerJumperID);
-        ArrayAdapter<CharSequence> jumperAdapter=ArrayAdapter.createFromResource(mainObjectContext, R.array.CurrentTeamNames, android.R.layout.simple_spinner_item);
-        jumperAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        JumperSpinner.setAdapter(jumperAdapter);
+        ArrayAdapter<String> MemberAdapter = new ArrayAdapter<>(mainObjectContext, android.R.layout.simple_spinner_item, Members);
+        JumperSpinner.setAdapter(MemberAdapter);
     }
 }

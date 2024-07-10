@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class fragment_members extends Fragment {
-    ActivityVariables ThisActivity;
+    ActivityVariables mAv;
     Database mDb;
     public fragment_members( Database db) {mDb = db;}
 
@@ -36,18 +36,18 @@ public class fragment_members extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,  Bundle savedInstanceState) {
-        ThisActivity = new ActivityVariables(inflater.inflate(R.layout.fragment_members, container, false), this.getContext(),getActivity());
+        mAv = new ActivityVariables(inflater.inflate(R.layout.fragment_members, container, false), this.getContext(),getActivity());
 
-         TextView MembersText = ThisActivity.mView.findViewById(R.id.MembersTxtView);
+         TextView MembersText = mAv.mView.findViewById(R.id.MembersTxtView);
          MembersText.setText(CreateTextDataFromDictionary(mDb.mPositionsAndMembers));
 
-         ImageView AddMemberButton = ThisActivity.mView.findViewById(R.id.AddMember);
-         AddMemberButton.setOnClickListener(view -> CreateAddMemberDialogBox(R.layout.layout_add_team_members ));
-        ThisActivity.mView.setOnTouchListener(new OnSwipeTouchListener(ThisActivity.mContext) {
+         ImageView AddMemberButton = mAv.mView.findViewById(R.id.AddMember);
+         AddMemberButton.setOnClickListener(view -> CreateAddMemberDialogBox(R.layout.layout_add_team_members, mAv, mDb));
+        mAv.mView.setOnTouchListener(new OnSwipeTouchListener(mAv.mContext) {
             @Override
             public void onSwipeLeft() {closeFragment();}});
 
-         return ThisActivity.mView;
+         return mAv.mView;
     }
 
      static Spanned CreateTextDataFromDictionary(Dictionary<String, List<String>> PositionAndMembers){
@@ -57,24 +57,25 @@ public class fragment_members extends Fragment {
         while (DictKeys.hasMoreElements()){
             String Element = DictKeys.nextElement();
             if (!Objects.equals(Element, LastElement)){PositionAndMembersString.append("<b>").append(Element).append("</b><br>");}
-            for (int i =0; i < PositionAndMembers.get(Element).size(); i++ ){ PositionAndMembersString.append(PositionAndMembers.get(Element)).append("<br>"); }
-            LastElement = Element;
+            for (int i =0; i < PositionAndMembers.get(Element).size(); i++ ){
+                PositionAndMembersString.append(PositionAndMembers.get(Element).get(i)).append("<br>");
+            } LastElement = Element;
         }
          return Html.fromHtml(PositionAndMembersString.toString(), 0);
     }
 
-    public void CreateAddMemberDialogBox(int id) {
-        View dialogView = LayoutInflater.from(ThisActivity.mActivity).inflate(id, null);
+    static public void CreateAddMemberDialogBox(int id, ActivityVariables mAv, Database mDb) {
+        View dialogView = LayoutInflater.from(mAv.mActivity).inflate(id, null);
 
         EditText JumperName = dialogView.findViewById(R.id.NewMemberJumperName);
 
         Spinner JumperPosition = dialogView.findViewById(R.id.TeamPositionSpinner);
-        ArrayAdapter<CharSequence> PositionAdapter = ArrayAdapter.createFromResource(ThisActivity.mContext, R.array.Positions, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> PositionAdapter = ArrayAdapter.createFromResource(mAv.mContext, R.array.Positions, android.R.layout.simple_spinner_item);
         PositionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         JumperPosition.setAdapter(PositionAdapter);
 
         Spinner JumperTeam = dialogView.findViewById(R.id.TeamSpinner);
-        ArrayAdapter<String> TeamAdapter = new ArrayAdapter<>(ThisActivity.mContext, android.R.layout.simple_spinner_item, mDb.GetSpinnerArray(mDb.LoadedTeams));
+        ArrayAdapter<String> TeamAdapter = new ArrayAdapter<>(mAv.mContext, android.R.layout.simple_spinner_item, mDb.GetSpinnerArray(mDb.LoadedTeams));
         JumperTeam.setAdapter(TeamAdapter);
 
         ImageButton AddMemberToPending = dialogView.findViewById(R.id.ImageBtnAddMemberID);
@@ -89,9 +90,9 @@ public class fragment_members extends Fragment {
             PendingMemberTeam.setText(JumperTeam.getSelectedItem().toString());
         });
 
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(ThisActivity.mActivity)
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(mAv.mActivity)
                 .setView(dialogView)
-                .setPositiveButton((Html.fromHtml("<font color='#000000'>Confirm Pending</font>", 0)), (dialog, id1) -> SetTeamMember(PendingMemberPosition.getText().toString(), PendingMemberName.getText().toString(), PendingMemberTeam.getText().toString(), mDb, ThisActivity.mView))
+                .setPositiveButton((Html.fromHtml("<font color='#000000'>Confirm Pending</font>", 0)), (dialog, id1) -> SetTeamMember(PendingMemberPosition.getText().toString(),PendingMemberTeam.getText().toString(), PendingMemberName.getText().toString(), mDb, mAv.mView))
                 .setNegativeButton((Html.fromHtml("<font color='#000000'>Cancel</font>", 0)), (dialog, id1) -> dialog.dismiss());
         alertBuilder.create(); //creates the objects to be used
         alertBuilder.show();
@@ -108,8 +109,14 @@ public class fragment_members extends Fragment {
     }
 
     static void Refresh(View mView, Database mDb ){
-        TextView MembersText = mView.findViewById(R.id.MembersTxtView);
-        MembersText.setText(CreateTextDataFromDictionary(Database.SetCurrentTeamStaticVer(mDb.LoadedTeams)));
+        if (mView.findViewById(R.id.MembersTxtView) != null){
+            TextView MembersText = mView.findViewById(R.id.MembersTxtView);
+            mDb.SetCurrentTeam();
+            MembersText.setText(CreateTextDataFromDictionary(mDb.mPositionsAndMembers));
+            mDb.DBChangesMade(); //should send changes to the database
+        }
+        mDb.SetCurrentTeam();
+        mDb.DBChangesMade(); //should send changes to the database
     }
 
     private void closeFragment() {requireActivity().getOnBackPressedDispatcher().onBackPressed();}
