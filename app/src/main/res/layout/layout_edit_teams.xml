@@ -2,120 +2,44 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/CreateNewTeam"
     android:layout_width="match_parent"
-    android:layout_height="210dp"
+    android:layout_height="wrap_content"
     android:background="@color/grey">
 
-    <LinearLayout
-        android:id="@+id/CreateTeamHeader"
+    <RelativeLayout
+        android:id="@+id/EditTeamsAfterSelected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/DarkGrey">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create Team"
-            android:textColor="@color/white"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/TextLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/CreateTeamHeader"
-        android:layout_alignStart="@+id/EditablesLayout"
-        android:layout_marginStart="-150dp"
-        android:layout_toEndOf="@+id/EditablesLayout"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/CreateTeamHeader"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
-            android:text="Team"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/CreateTeamHeader"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
-            android:text="Team Name"
-            android:textColor="@color/white" />
-
-        <TextView
+            android:id="@+id/SelectTeam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="10dp"
-            android:text="Team Color"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:text="Select Team to Edit"
             android:textColor="@color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
-            android:text="Team Members"
-            android:textColor="@color/white" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/EditablesLayout"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:layout_below="@+id/CreateTeamHeader">
 
         <Spinner
-            android:id="@+id/TeamSpinner"
+            android:id="@+id/SelectTeamToEdit"
             android:layout_width="250dp"
             android:layout_height="35dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/SelectTeam"
             android:background="@color/lightGrey"
             android:layout_marginTop="10dp"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:background="@color/lightGrey"
-            android:layout_marginTop="10dp"/>
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp">
-            <Button
-                android:id="@+id/SelectColorBtn"
-                android:layout_width="200dp"
-                android:layout_height="35dp"
-                android:background="@color/lightGrey"
-                android:text="Select Color"
-                android:textColor="@color/black"
-                android:textSize="11sp"
-                android:layout_alignParentStart="true"
-                android:layout_alignStart="@+id/ColorView"/>
-            <View
-                android:id="@+id/ColorView"
-                android:layout_alignParentEnd="true"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="15dp"
-                android:background="@color/lightGrey"/>
         </RelativeLayout>
 
-        <Spinner
-            android:id="@+id/TeamMembersSpinner"
-            android:layout_width="250dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/lightGrey"/>
-    </LinearLayout>
-
+    <LinearLayout
+        android:id="@+id/ExpansionHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/EditTeamsAfterSelected" />
 
 </RelativeLayout>

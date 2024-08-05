@@ -43,10 +43,9 @@ public class fragment_members extends Fragment {
 
          ImageView AddMemberButton = mAv.mView.findViewById(R.id.AddMember);
          AddMemberButton.setOnClickListener(view -> CreateAddMemberDialogBox(R.layout.layout_add_team_members, mAv, mDb));
-        mAv.mView.setOnTouchListener(new OnSwipeTouchListener(mAv.mContext) {
-            @Override
-            public void onSwipeLeft() {closeFragment();}});
-
+         mAv.mView.setOnTouchListener(new OnSwipeTouchListener(mAv.mContext) {
+             @Override
+             public void onSwipeLeft() {closeFragment();}});
          return mAv.mView;
     }
 
@@ -57,9 +56,8 @@ public class fragment_members extends Fragment {
         while (DictKeys.hasMoreElements()){
             String Element = DictKeys.nextElement();
             if (!Objects.equals(Element, LastElement)){PositionAndMembersString.append("<b>").append(Element).append("</b><br>");}
-            for (int i =0; i < PositionAndMembers.get(Element).size(); i++ ){
-                PositionAndMembersString.append(PositionAndMembers.get(Element).get(i)).append("<br>");
-            } LastElement = Element;
+            for (int i =0; i < PositionAndMembers.get(Element).size(); i++ ){PositionAndMembersString.append(PositionAndMembers.get(Element).get(i)).append("<br>");}
+            LastElement = Element;
         }
          return Html.fromHtml(PositionAndMembersString.toString(), 0);
     }
@@ -98,14 +96,9 @@ public class fragment_members extends Fragment {
         alertBuilder.show();
     }
 
-    static void SetTeamMember(String MemberPosition, String MemberTeam, String MemberName, Database mDb, View mView){
-        TeamMember newTeamMember = new TeamMember( MemberName, TeamMember.Position.valueOf(MemberPosition));
-        for (Team teams : mDb.LoadedTeams.mTeamList){
-            if  (MemberTeam.equals(teams.mTeamName)){teams.AddTeamMember(newTeamMember);
-                Refresh(mView, mDb);
-                break;
-            }
-        }
+    static void SetTeamMember(String MemberPosition, String MemberTeam, String MemberName, Database Db, View mView){
+        Db.LoadedTeams.mFullListOfMembers.add(new TeamMember( MemberName, TeamMember.Position.valueOf(MemberPosition), MemberTeam)) ;
+        Refresh(mView, Db);
     }
 
     static void Refresh(View mView, Database mDb ){

@@ -9,16 +9,12 @@ public class Team {
     public int mTeamColor;
     public String mTeamName;
     public int mCurrentPoints;
-    public List<TeamMember> mTeamMembers;
     public int mTeamIndex;
 
     public Team(){
         mTeamColor = Color.rgb(1,1,1);
         mTeamName = "Team Name";
         mCurrentPoints = 0;
-        List<TeamMember> MemberList = new ArrayList<>();
-        MemberList.add(new TeamMember("Grey", TeamMember.Position.Coach));
-        mTeamMembers = MemberList;
         mTeamIndex = 0;
     }
 
@@ -26,23 +22,20 @@ public class Team {
         mTeamColor = TeamColor;
         mTeamName = TeamName;
         mCurrentPoints = 0;
-        mTeamMembers = TeamMembers;
-    }
-
-    void AddTeamMember(TeamMember newTeaMember){
-        mTeamMembers.add(newTeaMember);
     }
 
     public static class DatabaseTeam {
         public List<Team> mTeamList;
         public int mCurrentIndex;
         public String mTeamLog;
+        public List<TeamMember> mFullListOfMembers;
 
         DatabaseTeam(){ }
-        DatabaseTeam(List<Team>TeamList, int CurrentIndex, String TeamLog){
+        DatabaseTeam(List<Team>TeamList, int CurrentIndex, String TeamLog, List<TeamMember> FullListOfMembers){
             mTeamList = TeamList;
             mCurrentIndex = CurrentIndex;
             mTeamLog = TeamLog;
+            mFullListOfMembers =FullListOfMembers;
         }
     }
 }

@@ -52,9 +52,7 @@ public class WidgetFactory {
         BtnCreateNewTeam.setOnClickListener(view -> mDialogBoxCreator.CreateAlertBoxForTeamCreation(R.layout.layout_add_team, "Create New Team", mDb));
 
         Button BtnEditTeam = mAv.mView.findViewById(R.id.EditTeamBtn);
-        BtnEditTeam.setOnClickListener(view -> {
-
-        });
+        BtnEditTeam.setOnClickListener(view -> mDialogBoxCreator.CreateEditTeamBox(R.layout.layout_edit_teams, mDb));
 
         Button BtnEditAccount= mAv.mView.findViewById(R.id.EditAccount);
         BtnEditAccount.setOnClickListener(view -> {
@@ -126,8 +124,7 @@ public class WidgetFactory {
         ImageButton OpenExtraTagsMenuBtn = mAv.mView.findViewById(R.id.ImageBtnOpenMoreTagsMenu);
         OpenExtraTagsMenuBtn.setOnClickListener(view -> {
             if (!ExtraTagsActive){
-                if (mDb.mSpinnerArray == null){AddExtraTags.CreateExtraTagsBox(mAv.mContext, mainLayout, mDb.GetSpinnerArray(mDb.LoadedTeams));}
-                else {AddExtraTags.CreateExtraTagsBox(mAv.mContext, mainLayout, mDb.mSpinnerArray);}
+                AddExtraTags.CreateExtraTagsBox(mAv.mContext, mainLayout, mDb.GetSpinnerArray(mDb.LoadedTeams.mFullListOfMembers));
                 ExtraTagsActive = true;
             }
             else {

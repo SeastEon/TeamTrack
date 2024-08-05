@@ -26,6 +26,7 @@ public class Database {
     ArrayList<String> mSpinnerArray;
     fragment_members fm;
     public Dictionary<String, List<String>> mPositionsAndMembers;
+
     Database(RelativeLayout mainActivity){
         mMainActivity = mainActivity;
     }
@@ -56,6 +57,12 @@ public class Database {
         return mSpinnerArray;
     }
 
+    ArrayList<String> GetSpinnerArray (List<TeamMember> Members){
+        mSpinnerArray = new ArrayList<>();
+        for (TeamMember members: Members) {mSpinnerArray.add(members.mName);}
+        return mSpinnerArray;
+    }
+
     void SetCurrentTeam(){
         mPositionsAndMembers = new Hashtable<>();
         Team CurrTeam = LoadedTeams.mTeamList.get(LoadedTeams.mCurrentIndex);
@@ -78,16 +85,19 @@ public class Database {
         List<String> SeniorList = new ArrayList<>();
         List<String> JuniorList = new ArrayList<>();
 
-        //this will add the jumpers from the database to list organised by their Position
-        for (TeamMember mTeamMember : CurrTeam.mTeamMembers) {
-            switch(mTeamMember.mPosition){
-                case Junior: JuniorList.add(mTeamMember.mName); break;
-                case Senior: SeniorList.add(mTeamMember.mName); break;
-                case Captain: CaptainList.add(mTeamMember.mName); break;
-                case Coach: CoachList.add(mTeamMember.mName); break;
-                case Head_Coach: HeadCoachList.add(mTeamMember.mName); break;
+        List<TeamMember>TeamMembers = getMembersOfTeam(CurrTeam.mTeamName);
+
+        for (TeamMember member:TeamMembers) {
+            switch(member.mPosition){
+                case Junior: JuniorList.add(member.mName); break;
+                case Senior: SeniorList.add(member.mName); break;
+                case Captain: CaptainList.add(member.mName); break;
+                case Coach: CoachList.add(member.mName); break;
+                case Head_Coach: HeadCoachList.add(member.mName); break;
             }
+
         }
+
         //Adds all the members to the dictionary for further use
         mPositionsAndMembers.put("Junior", JuniorList);
         mPositionsAndMembers.put("Senior", SeniorList);
@@ -96,10 +106,11 @@ public class Database {
         mPositionsAndMembers.put("Head Coach", HeadCoachList);
     }
 
-    List<TeamMember> GetFullListOfTeamMembers(){
-        List<TeamMember> FullListOfTeamMembers = new ArrayList<>();
-        for (Team team : LoadedTeams.mTeamList) {FullListOfTeamMembers.addAll(team.mTeamMembers);}
-        return FullListOfTeamMembers;
+    List<TeamMember> getMembersOfTeam(String TeamName){
+        List<TeamMember> members = new ArrayList<>();
+        for (TeamMember member: LoadedTeams.mFullListOfMembers) {
+            if (member.mTeamName.equals(TeamName)){members.add(member); }
+        } return members;
     }
 
     void CreateLogText(Boolean Add, int Value, Boolean ExtraTagsActive, ActivityVariables Av) {
@@ -113,11 +124,11 @@ public class Database {
             Spinner JumperSpinner = Av.mView.findViewById(R.id.SpinnerJumperID);
             String SReason = TxtReason.getText().toString();
             String Member = JumperSpinner.getSelectedItem().toString();
-            if (!Member.equals("")){
-                if (!SReason.equals("")){LogEntry += "because " + Member +" "+ SReason;}
+            if (!Member.isEmpty()){
+                if (!SReason.isEmpty()){LogEntry += "because " + Member +" "+ SReason;}
                 else{LogEntry += "because of " + Member;}
             } else {
-                if (!SReason.equals("")){LogEntry += "because " + Member +" "+ SReason;}
+                if (!SReason.isEmpty()){LogEntry += "because " + Member +" "+ SReason;}
             }
         }
         AddToLog(LogEntry);
